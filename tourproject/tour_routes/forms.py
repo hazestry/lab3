@@ -1,5 +1,5 @@
 from django import forms
-from models import TourRoute
+from .models import TourRoute
 
 class TourRouteForm(forms.ModelForm):
     class Meta:
@@ -11,3 +11,4 @@ class TourRouteForm(forms.ModelForm):
         if length <= 0:
             raise forms.ValidationError("Длина маршрута должна быть больше 0.")
         return length
+

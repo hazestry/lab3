@@ -7,6 +7,7 @@ from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from .forms import TourRouteForm
 from xml.etree.ElementTree import Element, SubElement, tostring, parse, ParseError
+from django.http import FileResponse, Http404
 
 UPLOAD_DIR = os.path.join(settings.MEDIA_ROOT)
 
@@ -129,3 +130,11 @@ def list_files(request):
             continue
 
     return render(request, 'tour_routes/list_files.html', {'files_data': files_data, 'message': message})
+
+def download_file(request, filename):
+    safe_filename = filename  # Простейшая защита, можно доработать
+    file_path = os.path.join(UPLOAD_DIR, safe_filename)
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=filename)
+    else:
+        raise Http404("файл не найден")
