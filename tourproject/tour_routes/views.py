@@ -89,9 +89,9 @@ def upload_file(request):
 
             if not is_valid:
                 os.remove(filepath)
-                message = "Файл с данными невалиден и удалён."
+                message = "файл с данными невалиден и удалён."
             else:
-                message = f"Файл {new_filename} успешно загружен."
+                message = f"файл {new_filename} успешно загружен."
 
     return render(request, 'tour_routes/upload_file.html', {'message': message})
 
@@ -110,7 +110,7 @@ def list_files(request):
             xml_files.append(fname)
 
     if not json_files and not xml_files:
-        message = "Файлы отсутствуют."
+        message = "файлы отсутствуют."
 
     files_data = []
 
