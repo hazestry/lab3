@@ -1,0 +1,15 @@
+<h2>Список файлов с маршрутами</h2>
+{% if message %}
+  <p>{{ message }}</p>
+{% else %}
+  {% for file in files_data %}
+    <h3>{{ file.filename }} ({{ file.format }})</h3>
+    <ul>
+    {% for key, val in file.content.items %}
+      <li><strong>{{ key }}</strong>: {{ val }}</li>
+    {% endfor %}
+    </ul>
+  {% endfor %}
+{% endif %}
+<a href="{% url 'add_route' %}">Добавить маршрут</a><br>
+<a href="{% url 'upload_file' %}">Загрузить файл</a>

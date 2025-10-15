@@ -1,0 +1,9 @@
+<h2>Загрузить JSON или XML файл</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="file" required>
+  <button type="submit">Загрузить</button>
+</form>
+<p>{{ message }}</p>
+<a href="{% url 'add_route' %}">Добавить маршрут</a><br>
+<a href="{% url 'list_files' %}">Список файлов</a>

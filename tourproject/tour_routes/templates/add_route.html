@@ -1,0 +1,9 @@
+<h2>Добавить маршрут</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Сохранить</button>
+</form>
+<p>{{ message }}</p>
+<a href="{% url 'upload_file' %}">Загрузить файл</a><br>
+<a href="{% url 'list_files' %}">Список файлов</a>
