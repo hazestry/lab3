@@ -9,11 +9,34 @@
         <button>Скачать</button>
       </a>
     </h3>
-    <ul>
-    {% for key, val in file.content.items %}
-      <li><strong>{{ key }}</strong>: {{ val }}</li>
-    {% endfor %}
-    </ul>
+    
+    {% if file.content.TourRoute %}
+      <!-- Если есть TourRoute (массив маршрутов) -->
+      {% for route in file.content.TourRoute %}
+        <ul>
+          <li><strong>name:</strong> {{ route.name }}</li>
+          <li><strong>description:</strong> {{ route.description }}</li>
+          <li><strong>length_km:</strong> {{ route.length_km }}</li>
+          <li><strong>difficulty:</strong> {{ route.difficulty }}</li>
+        </ul>
+      {% endfor %}
+    {% elif file.content.name %}
+      <!-- Если это один маршрут (словарь с полями напрямую) -->
+      <ul>
+        <li><strong>name:</strong> {{ file.content.name }}</li>
+        <li><strong>description:</strong> {{ file.content.description }}</li>
+        <li><strong>length_km:</strong> {{ file.content.length_km }}</li>
+        <li><strong>difficulty:</strong> {{ file.content.difficulty }}</li>
+      </ul>
+    {% else %}
+      <!-- Для других файлов -->
+      <ul>
+      {% for key, val in file.content.items %}
+        <li><strong>{{ key }}:</strong> {{ val }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    
   {% endfor %}
 {% endif %}
 <a href="{% url 'add_route' %}">Добавить маршрут</a><br>
