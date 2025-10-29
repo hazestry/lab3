@@ -7,6 +7,7 @@ from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from .forms import TourRouteForm
 from xml.etree.ElementTree import Element, SubElement, tostring, parse, ParseError, ElementTree
+import xml.etree.ElementTree as ET
 from django.http import FileResponse, Http404
 
 UPLOAD_DIR = os.path.join(settings.MEDIA_ROOT)
@@ -25,9 +26,10 @@ def add_route(request):
                 'name': route.name,
                 'description': route.description,
                 'length_km': route.length_km,
-                'difficulty': route.difficulty
+                'difficulty': route.difficulty,
+                'members_count': route.members_count
             }
-            # XML: читаем если есть или создаём корень
+            #читаем если есть или создаём корень
             if os.path.exists(ROUTES_XML):
                 tree = ElementTree()
                 tree.parse(ROUTES_XML)
@@ -53,27 +55,24 @@ def upload_file(request):
     message = ''
     if request.method == 'POST' and request.FILES.get('file'):
         uploaded_file = request.FILES['file']
-        # Санитайзим имя
         ext = os.path.splitext(uploaded_file.name)[1].lower()
         if ext not in ['.xml']:
             message = "Недопустимый формат файла"
         else:
-            # Генерируем имя
+            # генерируем имя
             new_filename = f"{uuid.uuid4()}{ext}"
             filepath = os.path.join(UPLOAD_DIR, new_filename)
-            # Сохраняем файл
+            # сохраняем файл
             with default_storage.open(filepath, 'wb+') as destination:
                 for chunk in uploaded_file.chunks():
                     destination.write(chunk)
-            # Проверка валидности
+            # проверка валидности
             is_valid = False
             if ext == '.xml':
                 try:
-                    tree = parse(filepath)
+                    tree = ET.parse(filepath)
                     root = tree.getroot()
-                    tags = [child.tag for child in root]
-                    if all(tag in tags for tag in ['name', 'description', 'length_km', 'difficulty']):
-                        is_valid = True
+                    is_valid = True
                 except (ParseError, Exception):
                     is_valid = False
 
@@ -106,6 +105,7 @@ def list_files(request):
             root = tree.getroot()
             content = parse_xml_element(root)
             files_data.append({'filename': fname, 'content': content, 'format': 'XML'})
+            print(files_data)
         except Exception:
             continue
 
@@ -124,12 +124,14 @@ def parse_xml_element(element):
                 result[child.tag].append(child_data)
             else:
                 result[child.tag] = child_data
+        if 'TourRoute' in result and not isinstance(result['TourRoute'], list):
+          result['TourRoute'] = [result['TourRoute']]
         
         return result
     else:
         return element.text if element.text and element.text.strip() else None
 def download_file(request, filename):
-    safe_filename = filename  # Простейшая защита, можно доработать
+    safe_filename = filename 
     file_path = os.path.join(UPLOAD_DIR, safe_filename)
     if os.path.exists(file_path):
         return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=filename)

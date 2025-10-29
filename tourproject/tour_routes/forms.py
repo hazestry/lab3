@@ -4,7 +4,7 @@ from .models import TourRoute
 class TourRouteForm(forms.ModelForm):
     class Meta:
         model = TourRoute
-        fields = ['name', 'description', 'length_km', 'difficulty']
+        fields = ['name', 'description', 'length_km', 'difficulty', 'members_count']
 
     def clean_length_km(self):
         length = self.cleaned_data.get('length_km')

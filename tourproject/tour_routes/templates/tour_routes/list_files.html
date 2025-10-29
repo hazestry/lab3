@@ -18,6 +18,7 @@
           <li><strong>description:</strong> {{ route.description }}</li>
           <li><strong>length_km:</strong> {{ route.length_km }}</li>
           <li><strong>difficulty:</strong> {{ route.difficulty }}</li>
+          <li><strong>Members count:</strong> {{ route.members_count }}</li>
         </ul>
       {% endfor %}
     {% elif file.content.name %}
@@ -27,6 +28,7 @@
         <li><strong>description:</strong> {{ file.content.description }}</li>
         <li><strong>length_km:</strong> {{ file.content.length_km }}</li>
         <li><strong>difficulty:</strong> {{ file.content.difficulty }}</li>
+        <li><strong>Members count:</strong> {{ file.content.members_count }}</li>
       </ul>
     {% else %}
       <!-- Для других файлов -->
